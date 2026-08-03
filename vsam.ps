@@ -1,0 +1,371 @@
+writing a sequential physical file in vsam                                      esds
+identification division.                                                        entry sequential data set
+program-id.                                                                     the organization is sequential
+environment division.                                                           the access mode is sequential,sequetial
+input-output section.                                                           the file duplicates are allowed 
+file control.                                                                   the deletion of records are not possible
+     select emp-file assign to disk1                                            writing a esds file
+     organization is sequential                                                        identification division.
+     access mode is sequential                                                         program-id. 
+     file status is fs.                                                                environment division.
+ data division.                                                                        input-output section.   
+ file section.                                                                         file control. 
+ fd emp-file.                                                                               select emp-file assign to disk1.
+    01 emp-rec.                                                                             organization is sequential.
+       02 emp-id   pic  9(02).                                                              access mode is sequential.
+       02 filler   pic  x(01).                                                              file status is fs.
+       02 emp-name pic  a(10).                                                          data division.  
+       02 filler   pic  x(27).                                                          file section.
+working-storage section.                                                                fd emp-file.
+01  fs  pic  9(02).                                                                        01  emp-rec.
+01  sub pic  9(02).                                                                          02  emp-id   pic  9(02).
+procedure division.                                                                          02  filler   pic  x(01).  
+     perfrom  open-para.                                                                     02  emp-name pic  x(10).
+     perfrom  write-para varying sub 1 by 1 until sub > 5.                                   02  filler   pic  x(27).
+     perfrom  close-para.                                                                working-storage section.
+   open-para.                                                                            01   fs    pic  9(02).
+       open output emp-file.                                                             01   sub   pic  9(02).
+       display 'file open status: ' fs                                                   procedure division.
+    write-para.                                                                               perform open-para.      
+        accept emp-id.                                                                        perform write-para varying sub from 1 by 1 until sub > 5.
+        accept emp-name.                                                                      perform close-para.
+        write emp-rec.                                                                       open-para. 
+        display emp-id ',' emp-name                                                              open output emp-file
+        display 'file write status: ' fs                                                         display 'file status code: ' fs
+     close-para.                                                                              write-para
+        close emp-file.                                                                            accept emp-id.
+        display 'file close status: ' fs.                                                          accept emp-name.
+---------------------------------------------------------------------------------                  write  emp-rec.
+read a sequential physical in vsam                                                                 display emp-id ',' emp-name
+                                                                                                   display 'file status code: ' fs
+identification division.                                                                       close-para       
+program-id.                                                                                       close emp-file
+environment division.                                                                             display 'file status code: 'fs
+input-output section.                                                          --------------------------------------------------------------------------------
+file control.                                                                            reading  a esds file in vsam
+    select emp-file assign to disk1                                                           identification division.
+    organization is sequential.                                                               program-id. 
+    access mode is sequential.                                                                environment division.
+    file status is fs.                                                                        input-output section. 
+data division.                                                                                file control    
+file section.                                                                                     organization is sequential.
+fd emp-file.                                                                                      access mode is sequential.
+   01 emp-rec.                                                                                    file status is fs.
+      02 emp-id   pic 9(02).                                                                   data division.
+      02 filler   pic x(01).                                                                   file section.
+      02 emp-name pic 9(04).                                                                   fd emp-file. 
+      02 filler   pic x(27).                                                                      01  emp-rec.
+working-storage section.                                                                          02  emp-id   pic  9(02).  
+01 fs  pic 9(02).                                                                                 02  filler   pic  x(01).
+01 sub pic 9(02).                                                                                 02  emp-name pic  x(10).
+procedure division.                                                                               02  filler   pic  x(27).
+    perfrom open-para.                                                                         procedure division.
+    perfrom read-para varying  from 1 by 1 until sub > 5.                                             perform  open-para.  
+    perfrom close-para.                                                                               perform  read-para varying sub from 1 by 1 until sub >5.
+    open-para                                                                                         perform  close-para.
+       open input emp-file                                                                            open-para
+       display 'file open status code: ' fs.                                                              open input emp-file
+    read-para                                                                                             display 'file status code: ' fs     
+        read emp-file                                                                                 read-para 
+            at end                                                                                         read emp-file
+               dispaly 'completed'                                                                            at end
+            not at end                                                                                           display 'completed'  
+                display 'file status code: '                                                                  not at end
+         end-read.                                                                                                display  emp-id  ',' emp-name
+    close-para.                                                                                             end-read 
+       close emp-file                                                                                  close-para
+       display 'file status code: '.                                                                       close  emp-file
+------------------------------------------------------------------------                                   display 'file status code: ' fs
+reading a ps file by using the if condition.                                                      ------------------------------------------------------------------------------
+      identification division.                                                                         reading a ksds file in dynamic access mode
+      program-id.                                                                                          identification division.
+      environment division.                                                                                program-id. dksds    
+      input-output section.                                                                                environment division.  
+      file control.                                                                                        input-output section.  
+          select emp-file assign to disk1.                                                                 file control. 
+          organization is sequential.                                                                           select emp-file assign to disk1.
+          access mode is sequential.                                                                            organization is indexed
+          file status is fs.                                                                                    access mode is dynamic
+      data division.                                                                                            record key is emp-id    
+      file section.                                                                                             file status is fs.
+      fd emp-file.                                                                                          data division.
+         01  emp-rec.                                                                                       file section.   
+         02  emp-id   pic  9(02).                                                                           fd emp-file 
+         02  filler   pic  x(01).                                                                              01  emp-rec.
+         02  emp-name pic 9(10).                                                                               02  emp-id   pic  9(02).
+         02  filler   pic x(27).                                                                               02  filler   pic  x(01).  
+     working-storage section.                                                                                  02  emp-name pic  x(10).
+     01  fs  pic  9(02).                                                                                       02  filler   pic  x(27).   
+     01  sub pic  9(02).                                                                                    working-storage section.
+     procedure division.                                                                                    01  fs   pic  9(02).   
+        perform open-para.                                                                                  02  sub  pic  9(02). 
+        perfrom read-para varying sub from 1 by 1 until sub > 5.                                            procedure division.
+        perform close-para.                                                                                     perform  open-para        
+        open-para.                                                                                              perform  start-para.
+           open input emp-file                                                                                  perform  close-para
+           display 'file status code:  'fs.                                                                 open-para    
+        read-para                                                                                                open input emp-file
+            read emp-file                                                                                        display 'file status code: 'fs  
+              at end                                                                                         start-para
+                 display 'completed'                                                                              move 04 to emp-id
+              not at end                                                                                          start emp-file 
+                   if emp-id = 03                                                                                      invalid key 
+                  display emp-id  ',' emp-name                                                                             display 'key is invalid'
+                   end if                                                                                              not invalid key
+               end- read                                                                                                   perform read-para varying sub from 1 by 1 until sub >5.
+         close-para                                                                                                 end-start          
+              close emp-file                                                                                          read-para
+              display  'file status code:  ' fs.                                                                           read emp-file next record
+-----------------------------------------------------------------                                                               at end 
+update emp-id and emp-name of  a ps file                                                                                           display 'completed'
+     identification division.                                                                                                   not at end   
+     program-id.                                                                                                                   display 'file status code: '  
+     environment division.                                                                                                   end-read 
+     input-output section.                                                                                             close-para
+     file control.                                                                                                          close emp-file
+          select emp-file assign to disk1.                                                                                  display ' '    
+          organizition is sequential.
+          access mode is sequential.
+          file status is fs.
+     data division.
+     file section.
+      fd  emp-file.
+          01  emp-rec.
+          02  emp-id   pic  9(02).
+          02  filler   pic  x(01).
+          02  emp-name pic  x(10). 
+          02  filler   pic  x(27).
+     working-storage section.
+     01  fs   pic  9(02).
+     02  sub  pic  9(02).
+     procedure division.
+        perform  open-para.
+        perform  read-para varying sub from 1 by 1 until sub > 5.
+        perform  close-para.
+     open-para
+        open i-o emp-file
+        display 'file status code: ' fs
+     read-para
+        read emp-file 
+          at end 
+             display 'completed'
+          not at end
+             if emp-id = 03
+                move spaces to emp-id
+                rewrite emp-rec
+             end-if
+          end read
+      display 'file status code: '
+     close-para
+     close emp-file
+     display 'file status code: ' fs.        
+---------------------------------------------------------------------------
+ extend with 3 new records in ps.
+ identification division.
+ program-id. extendps.
+ environment division.
+ input-output section.
+ file control
+   select emp-file assign to disk1
+   organization is sequential.
+   access mode is sequential.
+   file staus is fs.
+ data division.
+ file section.
+ fd emp-file.
+    01 emp-rec. 
+    02 emp-id  pic 9(02).
+    02 filler  pic x(01).
+    02 emp-rec pic x(10).
+    02 filler  pic x(27).
+ working-storage section.
+ 01  fs  pic  9(02).
+ 01  sub pic  9(02).
+ procedure division.
+   perform open-para.
+   perform write-para varying sub from 1 by 1 until sub > 5.
+   perform close-para
+   open-para
+      open extend emp-file
+      display 'file status code: ' fs
+   write-para
+       accept emp-id
+       accept emp-name
+       write  emp-rec
+       display  'file status code:  ' fs
+   close-para
+      close emp-file
+      display 'file status code:  'fs
+-----------------------------------------------------------------------
+ creating a ksds dataset
+//ibmuserj  job  notify = &sysuid
+//s1        exec pgm = idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  define cluster(name(harshi.ksds)-
+                 volume(s7sys1)-
+                 cisz(4020)-
+                 key(4,0)-
+                 freespace(10,10)-
+                 recordsize(40,40)-
+                 trk(10,10)-
+                 indexed)
+--------------------------------------------------------------------------
+creating a esds dataset
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  define cluster(name(harshi.esds)-
+                 volume(s7sys1)-
+                 cisz(4004)-
+                 recordsize(80,80)-
+                 trk(10,10)-
+                 non indexed)
+/*
+//
+----------------------------------------------------------------------------
+creating a rrds file
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  define cluster(name(harshi.rrds)-
+                 volume(s7sys1)-
+                 cisz(4096)-
+                 recordsize(80,80)-
+                 trk(10,10)-
+                 numbered)
+/*
+//
+-------------------------------------------------------------------------------
+creating a alternative index file
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  define alternateindex(name(harshi.alternate)-
+                        relate(harshi.ksds)-
+                        volume(s7sys1)-
+                        cisz(4096)-
+                        key(4,0)-
+                        freespace(10,10)-
+                        recordsize(80,80)-
+                        trk(10,10)-
+                        upgrade)
+/*
+//   
+----------------------------------------------------------------
+create a path file
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  define path(name(harshi.path)-
+              pathentry(harshi.alternate)-
+              update)
+/*
+---------------------------------------------------------
+create a bldfile(which copies from ksds to alternate)
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  bldindex ids(harshi.ksds)-
+           ods(harshi.alternate)
+/*
+//
+---------------------------------------------------------
+create a ams commands 
+//ibmuserj  job   notify=&sysuid
+//s1        exec  pgm=idcams
+//sysprint  dd    sysout=*
+//sysin     dd    *
+  define cluster(name(harshi.ksds))
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  alter harshi.ksds freespace(40,40)
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  delete 'harshi.ksds'
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  print ids(harshi.ksds) ch
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  listcat entries(harshi.ksds) all
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  export ids(harshi.ps)-
+         ods(harshi.ksds)-
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  import ids(harshi.ksds)-
+         ods(harshi.ps)
+/*
+//ibmuserj  job  notify=&sysuid
+//s1        exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  repro ids(harshi.ksds)-
+        ods(harshi.ps)
+/*
+-----------------------------------------------------
+copy the data from ksds to ps file based on key value
+//ibmuser  job  notify=&sysuid
+//ser      exec pgm=idcams
+//sysprint dd   sysout=*
+//sysin    dd   *
+  repro ids(harshi.ksds)-
+        ods(harshi.ps)-
+        from key(a0002)-
+        to key(a004)
+/*
+-----------------------------------------------------
+copy the data from esds to ps file based on rba value
+//ibmuser   job  notify=&sysuid
+//ser       exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  repro  ids(harshi.esds)-
+         ods(harshi.ps)-
+         from address(80)-
+         to address(240)
+/*
+-------------------------------------------------------
+copy the data from rrds to ps file based on rrn value
+//ibmuserj  job  notify=&sysuid
+//ser       exec pgm=idcams
+//sysprint  dd   sysout=*
+//sysin     dd   *
+  repro ids(ibmuser.rrds)-
+        ods(harshi.ps)-
+        from number(2)-
+        to number(5)
+/*
+
+
+   
+                                 
+                   
+                  
+
+ 
